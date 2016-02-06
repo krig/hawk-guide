@@ -51,31 +51,44 @@ you already have this file, skip step 1 below.
    cluster.
 
 Before configuring the cluster resource, lets test the fencing device
-manually to make sure it works. We can reboot one of the Bobs from
+manually to make sure it works. To do this, we need values for two
+parameters: ``hypervisor_uri`` and ``hostlist``.
+
+For ``hypervisor_uri``, the value should look like the following::
+
+  qemu+ssh://<hypervisor>/system
+
+Replace ``<hypervisor>`` with the hostname or IP address of the
+hypervisor. Make sure that the hostname resolves correctly from each
+cluster node.
+
+Configuring the ``hostlist`` is slightly more complicated. Most
+likely, the virtual machines have different names than their
+hostnames. In my case, the virtual machine names are of the form
+``hawk_guide-alice``, ``hawk_guide-bob1``...
+
+To check the actual names of your virtual machines, use ``virsh list``
+as a privileged user on the hypervisor. If the names of the virtual
+machines don't match the actual hostnames, you will need to use the
+longer syntax for the ``hostlist`` parameter::
+
+  hostlist="alice[:<alice-vm-name>],bob1[:<bob1-vm-name>],..."
+
+Replace ``<alice-vm-name>`` with the actual name of the virtual
+machine known as ``alice`` in the cluster. If the virtual machines
+happen to have the same name as the hostname of each machine, the
+``:<vm-name>`` part is not necessary.
+
+With this information, we can reboot one of the Bobs from
 Alice using the ``stonith`` command::
 
   $ stonith -t external/libvirt \
-      hostlist="alice,bob1,bob2" \
+      hostlist="alice:hawk_guide-alice,bob1:hawk_guide-bob1,bob2:hawk_guide-bob2" \
       hypervisor_uri="qemu+ssh://10.13.38.1/system" \
       -T reset bob1
 
-If this fails, the problem is most likely that the virtual machines
-have different names than those specificed above. To check the actual
-names of your virtual machines, use ``virsh list`` on the
-hypervisor. If the names of the virtual machines don't match the
-actual hostnames, you will need to use a slightly different syntax for
-the ``hostlist`` parameter::
-
-  hostlist="alice:<alice-vm-name>,bob1:<bob1-vm-name>,..."
-
-Replace ``<alice-vm-name>`` with the actual name of the virtual
-machine known as ``alice`` in the cluster.
-
-The other likely source of problems is the name of the hypervisor
-node. Make sure to use whatever hostname or IP address is correct for
-your environment.
-
-Now we can use Hawk to configure the fencing resource in the cluster.
+Once the fencing configuration is confirmed to be working, we can use
+Hawk to configure the actual fencing resource in the cluster.
 
 1. Open Hawk, and select "Add a resource" from the sidebar on the left.
 
@@ -97,15 +110,17 @@ Now we can use Hawk to configure the fencing resource in the cluster.
 
 6. Click the Create button to create the fencing agent.
 
+7. Go to the *Cluster Configuration* screen in Hawk, by selecting it
+   from the sidebar. Enable fencing by setting ``stonith-enabled`` to
+   ``true``.
+
 A note of caution: When things go wrong while configuring fencing, it
 can be a bit of a hassle. Since we're configuring a means of which
 Pacemaker can reboot its own nodes, if we aren't careful it might
 start doing just that. In a two-node cluster, a misconfigured fencing
 resource can easily lead to a reboot loop where two cluster nodes
 repeatedly fence each other. This is less likely with three nodes, but
-be careful. Also, make sure to remove the ``stonith:null`` fencing
-resource that was created by Vagrant once the new fencing resource has
-been started.
+be careful.
 
 fence_vbox (VirtualBox) [TODO]
 ------------------------------

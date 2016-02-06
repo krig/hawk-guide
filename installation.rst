@@ -81,10 +81,8 @@ to configure, especially in an automatic fashion. There are fencing
 agents available for both libvirt and VirtualBox, and there is also a
 form of fencing which relies on shared storage called SBD [#sbd]_.
 
-The example ``Vagrantfile`` configures a fencing device called
-``stonith:null``. In the event of a disastrous situation, the ``null``
-device does nothing. This is not good. To learn how to configure an
-actual fencing device for this cluster, see :doc:`stonith`.
+To learn how to configure an actual fencing device for this cluster,
+see :doc:`stonith`.
 
 .. rubric:: Footnotes
 .. [#vagrant] https://www.vagrantup.com/

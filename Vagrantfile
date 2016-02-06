@@ -45,7 +45,7 @@ Vagrant.configure("2") do |config|
 
   1.upto(2).each do |i|
     config.vm.define "bob#{i}", autostart: false do |machine|
-      machine.vm.hostname = "node#{i}"
+      machine.vm.hostname = "bob#{i}"
 
       machine.vm.network :forwarded_port,
         host_ip: ENV['VAGRANT_INSECURE_FORWARDS'] =~ /^(y(es)?|true|on)$/i ?

@@ -39,14 +39,16 @@ Make sure Hawk is running by logging into the ``alice`` VM and running
 the following commands::
 
   $ vagrant ssh alice
-  (alice) $ chkconfig hawk on
-  (alice) $ service hawk start
+  (alice) $ sudo chkconfig hawk on
+  (alice) $ sudo service hawk start
 
 Logging in
 ----------
 
 To view the Hawk web interface, open this URL in your
 web browser: https://localhost:7630/
+
+.. image:: _static/login.png
 
 Connecting to port ``7630`` on ``localhost`` should work for the above
 described installation method, since the ``Vagrantfile`` also forwards
@@ -67,6 +69,16 @@ password before exposing this cluster to the wider world.
 A note on fencing
 -----------------
 
+After logging in, the Status view of Hawk should appear, looking
+something like the image below.
+
+.. image:: _static/logged-in.png
+
+Notice that the status is yellow (meaning warning), and that there is
+an error reported::
+
+  STONITH is disabled. For normal cluster operation, STONITH is required.
+  
 STONITH, or fencing, is an essential element in any production
 cluster. When a node stops communicating or gives conflicting
 information to its peers, the other nodes need some way to ensure that
@@ -81,8 +93,8 @@ to configure, especially in an automatic fashion. There are fencing
 agents available for both libvirt and VirtualBox, and there is also a
 form of fencing which relies on shared storage called SBD [#sbd]_.
 
-To learn how to configure an actual fencing device for this cluster,
-see :doc:`stonith`.
+To learn how to configure an actual fencing device for this cluster
+and get rid of that warning, see :doc:`stonith`.
 
 .. rubric:: Footnotes
 .. [#vagrant] https://www.vagrantup.com/
@@ -91,5 +103,5 @@ see :doc:`stonith`.
                ``--provider=libvirt|virtualbox|...`` parameter to
                ``vagrant up``.
 .. [#bindfs] https://github.com/gael-ian/vagrant-bindfs
-.. [#stonith] STONITH: Shoot the Other Node in the Head.
+.. [#stonith] Shoot the Other Node in the Head.
 .. [#sbd] https://github.com/l-mb/sbd

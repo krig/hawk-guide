@@ -18,8 +18,9 @@ depends strongly on the type of nodes that are part of the cluster.
 
 For most virtual machine hosts there is a fencing agent which
 communicates with the hypervisor, for example the ``fence_vbox`` or
-``external/libvirt`` agents. See below for examples on how to
-configure fencing using the ``external/libvirt`` agent.
+``external/libvirt`` agents. For physical hardware, the most general
+fencing device is called SBD, and relies on shared storage like a
+SAN.
 
 external/libvirt
 ----------------
@@ -65,7 +66,7 @@ cluster node.
 Configuring the ``hostlist`` is slightly more complicated. Most
 likely, the virtual machines have different names than their
 hostnames. In my case, the virtual machine names are of the form
-``hawk_guide-alice``, ``hawk_guide-bob1``...
+``hawk-guide_alice``, ``hawk-guide_bob1``...
 
 To check the actual names of your virtual machines, use ``virsh list``
 as a privileged user on the hypervisor. If the names of the virtual
@@ -83,7 +84,7 @@ With this information, we can reboot one of the Bobs from
 Alice using the ``stonith`` command::
 
   $ stonith -t external/libvirt \
-      hostlist="alice:hawk_guide-alice,bob1:hawk_guide-bob1,bob2:hawk_guide-bob2" \
+      hostlist="alice:hawk-guide_alice,bob1:hawk-guide_bob1,bob2:hawk-guide_bob2" \
       hypervisor_uri="qemu+ssh://10.13.38.1/system" \
       -T reset bob1
 
@@ -128,6 +129,9 @@ fence_vbox (VirtualBox) [TODO]
 The fence agent for clusters using VirtualBox to host the virtual
 machines is called ``fence_vbox``, and ships in the ``fence-agents``
 package.
+
+The ``fence_vbox`` fencing agent is configured in much the same way as
+``external/libvirt``.
 
 TODO
 

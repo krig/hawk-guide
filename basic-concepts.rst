@@ -1,7 +1,7 @@
 Basic Concepts
 ==============
 
-Before we get started, we need to establish some basic concepts and
+Before we get any further, we should establish some basic concepts and
 terminology used in High Availability.
 
 Cluster
@@ -48,7 +48,6 @@ CIB
 CRM Shell
   Behind the scenes, Hawk uses the CRM command shell to interact with
   the cluster. The CRM shell can be used directly from the command
-  line via the command ``crm``. The command shell is very powerful and
-  can for example be used as a tool in configuration management
-  recipes.
+  line via the command ``crm``.
+
 

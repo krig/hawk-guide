@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_check_update = true
   config.ssh.insert_key = false
 
-  config.vm.define "webui", primary: true do |machine|
+  config.vm.define "alice", primary: true do |machine|
     machine.vm.hostname = "alice"
 
     machine.vm.network :forwarded_port,
@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
     machine.vm.provider :virtualbox do |provider, override|
       provider.memory = 1024
       provider.cpus = 1
-      provider.name = "hawk-alice"
+      provider.name = "alice"
     end
 
     machine.vm.provider :libvirt do |provider, override|
@@ -71,7 +71,7 @@ Vagrant.configure("2") do |config|
       machine.vm.provider :virtualbox do |provider, override|
         provider.memory = 512
         provider.cpus = 1
-        provider.name = "hawk-bob#{i}"
+        provider.name = "bob#{i}"
       end
 
       machine.vm.provider :libvirt do |provider, override|

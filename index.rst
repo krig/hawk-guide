@@ -6,21 +6,17 @@ Web Konsole. Hawk is a web interface for the HA Pacemaker stack in
 Linux. With Hawk, the management and configuration of HA clusters is
 greatly simplified.
 
+.. image:: _static/status.png
+
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
    installation
-   configure-stonith
-   nfs-server-wizard
-   status
-   dashboard
+   basic-concepts
+   stonith
    creating-a-resource
-   creating-constraints
-   history-explorer
-   editing-resources
-   resource-tags
    README
 
 Indices and tables

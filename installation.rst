@@ -1,64 +1,56 @@
 Installation
 ============
 
-openSUSE Tumbleweed
--------------------
+This guide comes with a ``Vagrantfile`` which configures and installs
+a basic three-node HA cluster running Pacemaker and Hawk. This is the
+cluster that will be used in the rest of this guide.
 
-The absolutely easiest way to try out Hawk is to run openSUSE
-Tumbleweed or openSUSE Leap, since a recent version of Hawk is
-available in the repositories::
+Make sure that you have a fairly recent version of Vagrant [#vagrant]_
+installed together with either VirtualBox or libvirt as the VM
+host. To use libvirt, you may need to install the bindfs [#bindfs]_ plugin for
+Vagrant. For more details on how to install and use Vagrant, see
+https://www.vagrantup.com/ .
 
-  $ zypper install hawk2
+To begin setting up the example cluster, use ``git`` to check out a
+copy of the source repository for this guide::
 
-Once installed, start Hawk by running::
-
-  $ chkconfig hawk on
-  $ service hawk start 
-
-Vagrant
--------
-
-Another way of trying out Hawk is to use Vagrant. In the Hawk source
-code repository we have included a Vagrantfile which describes a
-four-node cluster.
-
-Make sure that you have a fairly recent version of Vagrant installed
-together with either VirtualBox or libvirt as the VM host. To use
-libvirt, you may need to install the bindfs plugin for vagrant.
-
-Check out the Hawk source code from github::
-
-  $ git clone git@github.com:ClusterLabs/hawk
+  $ git clone git@github.com:krig/hawk-guide
 
 Now let Vagrant configure a virtual machine running Hawk::
 
-  $ cd hawk
-  $ vagrant up webui
+  $ cd hawk-guide
+  $ vagrant up alice
 
-If everything goes as it should, a VM running Pacemaker and Hawk
-should start up. Currently, the vagrant script installs Hawk 1, the
-previous version of Hawk. To install Hawk 2, SSH to the cluster node
-and install ``hawk2``::
+If everything goes as it should, Vagrant will go off and do its thing,
+downloading a base VM image and installing all the necessary network
+configuration and software packages that we'll need. Once the
+installation finishes, a VM running Pacemaker and Hawk should start
+up.
 
-  $ vagrant ssh webui
-  (webui) $ sudo zypper in hawk2
+The ``Vagrantfile`` can configure three VMs: ``alice``, ``bob1`` and
+``bob2``. So far we've only configured ``alice``, but once you have
+confirmed that the installation was successful you can also start the
+other two VMs using ``vagrant up``::
 
-Answer yes when prompted to remove the ``hawk`` package to install the
-``hawk2`` package.
+  $ vagrant up bob1
+  $ vagrant up bob2
 
-Make sure hawk is started by running::
+Make sure Hawk is running by logging into the ``alice`` VM and running
+the following commands::
 
-  $ chkconfig hawk on
-  $ service hawk start
+  $ vagrant ssh alice
+  (alice) $ chkconfig hawk on
+  (alice) $ service hawk start
 
-Verifying the installation
---------------------------
+Logging in
+----------
 
 To view the Hawk web interface, open this URL in your
 web browser: https://localhost:7630/
 
-Connecting to port ``7630`` on ``localhost`` works for both of the
-above described installation methods. If you installed Hawk on a
+Connecting to port ``7630`` on ``localhost`` should work for the above
+described installation method, since the ``Vagrantfile`` also forwards
+port ``7630`` from the virtual machine. If you installed Hawk on a
 different machine than the one you are currently using, you will need
 to connect to port ``7630`` on that machine instead.
 
@@ -72,3 +64,30 @@ username and password prompt. Enter ``hacluster`` as the username and
 the HA bootstrap script. Naturally, you would want to change this
 password before exposing this cluster to the wider world.
 
+A note on fencing
+-----------------
+
+STONITH, or fencing, is an essential element in any production
+cluster. When a node stops communicating or gives conflicting
+information to its peers, the other nodes need some way to ensure that
+the misbehaving node isn't running resources it shouldn't be. Examples
+of this kind of failure are network outages or a failed stop action.
+
+The mechanism used by Pacemaker to handle these kinds of failure is
+usually referred to as fencing or STONITH [#stonith]_.
+
+Any production cluster needs fencing. However, fencing can be complex
+to configure, especially in an automatic fashion. There are fencing
+agents available for both libvirt and VirtualBox, and there is also a
+form of fencing which relies on shared storage called SBD [#sbd]_.
+
+The example ``Vagrantfile`` configures a fencing device called
+``stonith:null``. In the event of a disastrous situation, the ``null``
+device does nothing. This is not good. To learn how to configure an
+actual fencing device for this cluster, see :doc:`stonith`.
+
+.. rubric:: Footnotes
+.. [#vagrant] https://www.vagrantup.com/
+.. [#bindfs] https://github.com/gael-ian/vagrant-bindfs
+.. [#stonith] STONITH: Shoot the Other Node in the Head.
+.. [#sbd] https://github.com/l-mb/sbd

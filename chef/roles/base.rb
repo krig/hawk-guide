@@ -52,17 +52,17 @@ default_attributes({
       {
         "ipaddress" => "10.13.38.10",
         "fqdn" => "alice.hawk.home",
-        "aliases" => %w(webui)
+        "aliases" => %w(alice)
       },
       {
         "ipaddress" => "10.13.38.11",
         "fqdn" => "bob1.hawk.home",
-        "aliases" => %w(node1)
+        "aliases" => %w(bob1)
       },
       {
         "ipaddress" => "10.13.38.12",
-        "fqdn" => "bob2.hawk.suse.com",
-        "aliases" => %w(node2)
+        "fqdn" => "bob2.hawk.home",
+        "aliases" => %w(bob2)
       }
     ]
   }

@@ -26,9 +26,9 @@ default["hawk"]["bob"]["packages"] = [
   "apache2"
 ]
 
-default["hawk"]["bob"]["apache_port"] = "sed -i 's/^Listen 80$/Listen 8000/g' /etc/apache2/listen.conf"
-default["hawk"]["bob"]["join_command"] = "ha-cluster-join -c 10.13.38.10 -i eth1 -y"
-default["hawk"]["bob"]["join_check"] = "systemctl -q is-active corosync.service"
-default["hawk"]["bob"]["ssh_host"] = "10.13.38.10"
-default["hawk"]["bob"]["ssh_check"] = "/usr/sbin/crm_mon -1"
 default["hawk"]["bob"]["apache_index"] = "/srv/www/htdocs/index.html"
+default["hawk"]["bob"]["apache_port"] = "sed -i 's/^Listen 80$/Listen 8000/g' /etc/apache2/listen.conf"
+default["hawk"]["bob"]["join_check"] = "systemctl -q is-active corosync.service"
+default["hawk"]["bob"]["join_command"] = "ha-cluster-join -c 10.13.38.10 -i eth1 -y"
+default["hawk"]["bob"]["ssh_check"] = "/usr/sbin/crm_mon -1"
+default["hawk"]["bob"]["ssh_host"] = "10.13.38.10"

@@ -86,21 +86,6 @@ node["hawk"]["bob"]["packages"].each do |name|
   end
 end
 
-template node["hawk"]["bob"]["haproxy_cfg"] do
-  source "haproxy.cfg.erb"
-  owner "root"
-  group "root"
-  mode 0644
-
-  variables(
-    node["hawk"]["bob"]
-  )
-
-  not_if do
-    node["hawk"]["bob"]["haproxy_cfg"].empty?
-  end
-end
-
 template node["hawk"]["bob"]["apache_index"] do
   source "index.html.erb"
   owner "root"

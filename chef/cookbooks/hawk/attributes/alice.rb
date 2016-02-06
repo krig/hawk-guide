@@ -26,8 +26,8 @@ default["hawk"]["alice"]["packages"] = [
   "apache2"
 ]
 
-default["hawk"]["alice"]["apache_port"] = "sed -i 's/^Listen 80$/Listen 8000/g' /etc/apache2/listen.conf"
-default["hawk"]["alice"]["init_command"] = "ha-cluster-init -i eth1 -y"
-default["hawk"]["alice"]["init_check"] = "systemctl -q is-active corosync.service"
-default["hawk"]["alice"]["initial_cib"] = "/root/crm-initial.conf"
 default["hawk"]["alice"]["apache_index"] = "/srv/www/htdocs/index.html"
+default["hawk"]["alice"]["apache_port"] = "sed -i 's/^Listen 80$/Listen 8000/g' /etc/apache2/listen.conf"
+default["hawk"]["alice"]["init_check"] = "systemctl -q is-active corosync.service"
+default["hawk"]["alice"]["init_command"] = "ha-cluster-init -i eth1 -y"
+default["hawk"]["alice"]["initial_cib"] = "/root/crm-initial.conf"

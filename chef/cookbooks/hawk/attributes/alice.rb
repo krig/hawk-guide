@@ -20,9 +20,10 @@
 default["hawk"]["alice"]["packages"] = [
   "hawk2",
   "fence-agents",
+  "libvirt-client",
   "ha-cluster-bootstrap",
   "w3m",
-  "apache2",
+  "apache2"
 ]
 
 default["hawk"]["alice"]["apache_port"] = "sed -i 's/^Listen 80$/Listen 8000/g' /etc/apache2/listen.conf"

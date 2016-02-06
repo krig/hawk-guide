@@ -20,6 +20,7 @@
 default["hawk"]["bob"]["packages"] = [
   "hawk2",
   "fence-agents",
+  "libvirt-client",
   "ha-cluster-bootstrap",
   "w3m",
   "apache2"

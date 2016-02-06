@@ -50,7 +50,7 @@ Once the SSH keys have been created, execute the following command as
 Replace ``10.13.38.1`` with the hostname or IP address of the
 hypervisor. Make sure that the hostname resolves correctly from all of
 the cluster nodes.
-  
+
 Before configuring the cluster resource, lets test the fencing device
 manually to make sure it works. To do this, we need values for two
 parameters: ``hypervisor_uri`` and ``hostlist``.
@@ -133,7 +133,7 @@ Hawk to configure the actual fencing resource in the cluster.
 
    .. image:: _static/stonith-enabled.png
               :align: center
-   
+
 A note of caution: When things go wrong while configuring fencing, it
 can be a bit of a hassle. Since we're configuring a means of which
 Pacemaker can reboot its own nodes, if we aren't careful it might
@@ -161,7 +161,28 @@ external/ec2 (Amazon EC2) [TODO]
 The ``external/ec2`` fence agent provides fencing that works for
 cluster nodes running in the Amazon EC2 public cloud.
 
-TODO
+1. Install the AWS CLI. For instructions on how to do this, see the
+   Amazon start guide: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
+
+2. Create the fence resource with the following commands (replacing
+   ``<node>`` and ``<tag>`` with appropriate values for your cluster::
+
+    $ crm configure primitive fencing-<node> stonith:external/ec2 \
+         params \
+           pcmk_off_timeout="300s" \
+           port="<node>" \
+           tag="<tag-name>" \
+         op start interval="0s" timeout="60s" \
+         op monitor interval="3600s" timeout="60s" \
+         op stop interval="0s" timeout="60s"
+     $ crm configure location loc-fence-<node> \
+         fencing-<node> -inf: <node>
+
+It is necessary to create a separate fence resource for each node in
+the cluster. The location constraint ensures that the fence resource
+responsible for managing node A never runs on node A itself.
+
+TODO: Verify these instructions, use Hawk to configure the resource.
 
 SBD [TODO]
 ----------
@@ -171,12 +192,43 @@ such as a SAN or iSCSI is available. It has proven to be more reliable
 than many firmware fencing devices, and is the recommended method for
 fencing physical hardware nodes.
 
-TODO
+There are two preparatory steps that need to be taken before
+configuring SBD:
 
+1. Ensure that you have a **watchdog device** enabled. Either this is
+   available depending on your platform, or you would use the software
+   watchdog that the Linux kernel provides. Note that use of the
+   software watchdog makes SBD less reliable than with a true watchdog
+   device.
+
+2. Set up a shared storage device. This needs to be writable by all
+   nodes. It can be very small, SBD only needs about 1MB of space, but
+   it cannot be used for anything other than SBD.
+
+Once a watchdog is enabled and all cluster nodes can access the shared
+block device, SBD can be enabled and configured as a cluster resource:
+
+1. Configure SBD using the `/etc/sysconfig/sbd` configuration
+   file. For details on how to configure SBD, see the SBD man page:
+   https://github.com/l-mb/sbd/blob/master/man/sbd.8.pod
+
+2. Enable the SBD service on each cluster node::
+
+    $ systemctl enable sbd
+    $ systemctl start sbd
+
+3. Configure the SBD cluster resource::
+
+    $ crm configure \
+        primitive fencing stonith:external/sbd \
+        op start start-delay=15s timeout=60s
+
+
+TODO: Verify these instructions, use Hawk to configure the resource.
 
 .. rubric:: Footnotes
 .. [#fencing] The two terms come from the merging of two different
               cluster projects: The Linux HA project traditionally
               uses the term STONITH, while the Red Hat cluster suite
-              uses fencing to denote the same concept. 
+              uses fencing to denote the same concept.
 .. [#sbd] Shared-storage Based Death. https://github.com/l-mb/sbd

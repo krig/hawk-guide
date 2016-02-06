@@ -16,7 +16,7 @@ copy of the source repository for this guide::
 
   $ git clone git@github.com:krig/hawk-guide
 
-Now let Vagrant configure a virtual machine running Hawk::
+Now let Vagrant configure a virtual machine [#provider]_ running Hawk::
 
   $ cd hawk-guide
   $ vagrant up alice
@@ -88,6 +88,10 @@ actual fencing device for this cluster, see :doc:`stonith`.
 
 .. rubric:: Footnotes
 .. [#vagrant] https://www.vagrantup.com/
+.. [#provider] This command lets Vagrant decide which virtualization
+               provider to use. To select a provider manually, pass
+               ``--provider=libvirt|virtualbox|...`` parameter to
+               ``vagrant up``.
 .. [#bindfs] https://github.com/gael-ian/vagrant-bindfs
 .. [#stonith] STONITH: Shoot the Other Node in the Head.
 .. [#sbd] https://github.com/l-mb/sbd

@@ -17,6 +17,9 @@ Contents:
    basic-concepts
    stonith
    creating-a-resource
+   wizard
+   history-explorer
+   simulator
    README
 
 Indices and tables

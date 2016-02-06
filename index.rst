@@ -9,6 +9,10 @@ Web Konsole. Hawk is a web interface for the HA Pacemaker stack in
 Linux. With Hawk, the management and configuration of HA clusters is
 greatly simplified.
 
+Right now, only a small subset of the features in Hawk are covered,
+and the Guide is not a complete introduction to HA clusters in
+general.
+
 Contents:
 
 .. toctree::

@@ -1,5 +1,5 @@
-Getting Started using Hawk
-==========================
+About this Guide
+================
 
 This is the user guide for Hawk, the High Availability Web Konsole.
 

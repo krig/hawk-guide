@@ -11,10 +11,21 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   installation
+   configure-stonith
+   nfs-server-wizard
+   status
+   dashboard
+   creating-a-resource
+   creating-constraints
+   history-explorer
+   editing-resources
+   resource-tags
+   README
+
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
 

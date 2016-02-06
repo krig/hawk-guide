@@ -12,7 +12,7 @@ parameters and monitor its location and status.
 Add a resource
 --------------
 
-To add a resource, click ``Add a resource`` in the sidebar on the
+To add a resource, click *Add Resource* in the sidebar on the
 left. This brings up a list of different types of resources we can
 create. All basic resources that map to a resource agent or service
 are called *Primitive resources*. Click the **Primitive** button on
@@ -30,6 +30,7 @@ this screen.
    modal dialog describing the selected agent.
 
    .. image:: _static/resource-type.png
+              :align: center
 
 Parameters
 ^^^^^^^^^^
@@ -92,6 +93,7 @@ Create. Hawk will post a notification showing if it completed the
 operation successfully or not.
 
 .. image:: _static/resource-post-create.png
+              :align: center
 
 Command Log
 ^^^^^^^^^^^
@@ -101,38 +103,115 @@ Log* in the sidebar to the left of the screen. Here you can see a list
 of ``crm`` commands executed by Hawk, with the most recent command
 listed first.
 
+.. image:: _static/command-log.png
+              :align: center
+
 Status and Dashboard
 --------------------
 
-* Look at the resource in the status view.
-* Look at the resource in the dashboard view.
+The created resource ``test1`` will appear as a green line in the Hawk
+status view. Stopped resources are colored white, while failed
+resources are red.
+
+.. image:: _static/resource-status.png
+              :align: center
+
+
+The Dashboard view gives an alternative view of the cluster status. In
+this view, the cluster is represented by a matrix of lights indicating
+the state of the resource on each node.
+
+Each row is a resource, and each column is a node. The rightmost
+column holds resources that are stopped and therefore not running on
+any node.
+
+.. image:: _static/resource-dashboard.png
+              :align: center
 
 Starting and Stopping
 ^^^^^^^^^^^^^^^^^^^^^
 
-TODO
+Resources can be started and stopped directly from the status
+view. Use the control icons to the right of the resource listing. When
+stopping a resource, Hawk will ask for verification before applying
+the change.
+
+.. image:: _static/resource-stop.png
+              :align: center
+
+Try stopping and starting the resource. Open the Dashboard in another
+browser window and see how it updates when the resource is stopped or
+started.
 
 Migrating Resources
 ^^^^^^^^^^^^^^^^^^^
 
-TODO
+Clicking the down arrow icon next to a resource opens the extended
+operation menu. From this menu you can choose from a list of more
+advanced resource operations.
 
-Managed and Unmanaged Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Migrating a resource means moving it away from its current
+location. This is done with the help of a location constraint created
+by the user interface. Migration can be given a destination node as an
+argument, or if no node is provided, the resource is migrated to any
+other node.
 
-TODO
+To create such a migration constraint, use the *Migrate* action in the
+resource menu.
 
-Failcounts
-^^^^^^^^^^
+.. image:: _static/resource-migrate.png
+              :align: center
 
-TODO
+Once the resource has been migrated, the constraint can be
+removed. This is done using the *Unmigrate* action. Note, however,
+that once the constraint is removed, Pacemaker may decide to move the
+resource back to its original location. To prevent this from
+happening, set the ``resource-stickiness`` cluster property.
+
+Details
+^^^^^^^
+
+The Details view is accessed via the looking glass button for a
+resource. This view shows the resource configuration and other
+details, plus a list of instances.
+
+.. image:: _static/resource-details.png
+              :align: center
 
 Recent Events
 ^^^^^^^^^^^^^
 
-TODO
+The Recent Events pane shows a list of actions taken by Pacemaker
+related to the resource. Each action has a return code, the meaning of
+which is explained by the tooltip which shows when hovering the mouse
+over the code. For example ``0`` means success, while ``7`` means that
+the resource was not running.
+
+In the example view, you can see multiple red lines indicating that
+the resource action failed. These are not actual failures. Pacemaker
+runs monitor actions for resources on **all** nodes in the cluster, to
+make sure that the resource is not running where it shouldn't
+be. These probes show up as failed actions in the Recent Event view,
+but they are in fact expected to fail.
+
+.. image:: _static/recent-events.png
+              :align: center
+
+It is possible to disable these probes for a resource using the
+*Resource Discovery* attribute on a location constraint. This,
+however, is generally not a good idea and is only needed for some
+specific advanced configurations.
 
 Editing resources
 -----------------
 
-TODO
+The Edit view for a resource can be found either through the operation
+menu on the status view, or through the *Edit* screen accessible from
+the sidebar on the left.
+
+Once in the edit view, you can change any parameters or attributes for
+the resource, or even delete it.
+
+Note that it is not yet possible to rename or change the resource type
+of an existing resource in Hawk.
+

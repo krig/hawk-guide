@@ -33,24 +33,24 @@ command line tool. In this example, fencing device of choice is the
 cluster nodes.
 
 To ensure that communication between the cluster nodes and the
-hypervisor is authenticated, we need an SSH key. In the example
-cluster, Vagrant has already created a key but for completeness the
-steps below can be used. To see if a key has already been created for
-your nodes, check if ``/root/.ssh/id_rsa`` exists (as ``root``). If
-you already have this file, skip step 1 below.
+hypervisor is authenticated, we need the SSH key of each node to be
+authorized to access the hypervisor.
 
-1. Execute ``ssh-keygen -t rsa`` as ``root`` on one of the cluster
-   nodes. Accept the default answers for all questions.
+In the example cluster, Vagrant has already created an SSH key for
+us. If you do not have an ssh key, you will need to run the
+``ssh-keygen`` command as ``root`` on each node::
 
-2. Execute ``ssh-copy-id ~/.ssh/id_rsa.pub 10.13.38.1`` to copy the
-   SSH public key to the hypervisor. The IP address used is the one
-   configured in the example Vagrant setup. If your hypervisor is
-   available under a different IP address, make sure to use that
-   instead.
+  $ ssh-keygen -t rsa
 
-3. Repeat step 1 (if necessary) and step 2 on the other nodes in the
-   cluster.
+Once the SSH keys have been created, execute the following command as
+``root`` on each of the cluster nodes::
 
+  $ ssh-copy-id 10.13.38.1
+
+Replace ``10.13.38.1`` with the hostname or IP address of the
+hypervisor. Make sure that the hostname resolves correctly from all of
+the cluster nodes.
+  
 Before configuring the cluster resource, lets test the fencing device
 manually to make sure it works. To do this, we need values for two
 parameters: ``hypervisor_uri`` and ``hostlist``.
@@ -60,17 +60,24 @@ For ``hypervisor_uri``, the value should look like the following::
   qemu+ssh://<hypervisor>/system
 
 Replace ``<hypervisor>`` with the hostname or IP address of the
-hypervisor. Make sure that the hostname resolves correctly from each
-cluster node.
+hypervisor.
 
 Configuring the ``hostlist`` is slightly more complicated. Most
 likely, the virtual machines have different names than their
-hostnames. In my case, the virtual machine names are of the form
-``hawk-guide_alice``, ``hawk-guide_bob1``...
+hostnames.
 
 To check the actual names of your virtual machines, use ``virsh list``
-as a privileged user on the hypervisor. If the names of the virtual
-machines don't match the actual hostnames, you will need to use the
+as a privileged user on the hypervisor. This is what the output can
+look like::
+
+     Id    Name                           State
+    ----------------------------------------------------
+     4     hawk-guide_alice               running
+     7     hawk-guide_bob1                running
+     8     hawk-guide_bob2                running
+
+If the names of the virtual machines aren't exactly the same as the
+hostnames ``alice``, ``bob1`` and ``bob2``, you will need to use the
 longer syntax for the ``hostlist`` parameter::
 
   hostlist="alice[:<alice-vm-name>],bob1[:<bob1-vm-name>],..."
@@ -81,26 +88,34 @@ happen to have the same name as the hostname of each machine, the
 ``:<vm-name>`` part is not necessary.
 
 With this information, we can reboot one of the Bobs from
-Alice using the ``stonith`` command::
+Alice using the ``stonith`` command as ``root``::
 
   $ stonith -t external/libvirt \
       hostlist="alice:hawk-guide_alice,bob1:hawk-guide_bob1,bob2:hawk-guide_bob2" \
       hypervisor_uri="qemu+ssh://10.13.38.1/system" \
       -T reset bob1
 
+If everything is configured correctly, this should be the resulting
+output::
+
+    external/libvirt[23004]: notice: Domain hawk-guide_bob1 was stopped
+    external/libvirt[23004]: notice: Domain hawk-guide_bob1 was started
+
 Once the fencing configuration is confirmed to be working, we can use
 Hawk to configure the actual fencing resource in the cluster.
 
-1. Open Hawk, and select "Add a resource" from the sidebar on the left.
+1. Open Hawk by going to https://localhost:7630 and select *Add a
+   Resource* from the sidebar on the left.
 
-2. Click "Primitive" to create a new primitive resource.
+2. Click *Primitive* to create a new primitive resource.
 
 3. Name the resource ``libvirt-fence`` and in the selection box for
-   Class, choose ``stonith``. The Provider selection box will become
-   disabled. Now choose ``external/libvirt`` in the Type selection
+   Class, choose ``stonith``. The *Provider* selection box will become
+   disabled. Now choose ``external/libvirt`` in the *Type* selection
    box.
 
-   .. image:: _static/stonith-type.png
+   .. image:: _static/stonith-create.png
+              :align: center
 
 4. For the ``hostlist`` and ``hypervisor_url`` parameters, enter the
    same values as were used when testing the agent manually above.
@@ -108,13 +123,17 @@ Hawk to configure the actual fencing resource in the cluster.
 5. Change the ``target-role`` meta attribute to ``Started``.
 
    .. image:: _static/stonith-params.png
+              :align: center
 
-6. Click the Create button to create the fencing agent.
+6. Click the *Create* button to create the fencing agent.
 
 7. Go to the *Cluster Configuration* screen in Hawk, by selecting it
    from the sidebar. Enable fencing by setting ``stonith-enabled`` to
-   ``true``.
+   ``Yes``.
 
+   .. image:: _static/stonith-enabled.png
+              :align: center
+   
 A note of caution: When things go wrong while configuring fencing, it
 can be a bit of a hassle. Since we're configuring a means of which
 Pacemaker can reboot its own nodes, if we aren't careful it might

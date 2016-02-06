@@ -1,17 +1,15 @@
-.. Hawk documentation master file, created by
-   sphinx-quickstart on Sat Feb  6 00:55:56 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Getting Started using Hawk
+==========================
 
-Welcome to Hawk's documentation!
-================================
+This document is an introduction to using Hawk, the High Availability
+Web Konsole. Hawk is a web interface for the HA Pacemaker stack in
+Linux. With Hawk, the management and configuration of HA clusters is
+greatly simplified.
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
-
-
 
 Indices and tables
 ==================

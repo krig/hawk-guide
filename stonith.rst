@@ -210,7 +210,7 @@ block device, SBD can be enabled and configured as a cluster resource:
 
 1. Configure SBD using the `/etc/sysconfig/sbd` configuration
    file. For details on how to configure SBD, see the SBD man page:
-   https://github.com/l-mb/sbd/blob/master/man/sbd.8.pod
+   https://github.com/ClusterLabs/sbd/blob/master/man/sbd.8.pod
 
 2. Enable the SBD service on each cluster node::
 
@@ -231,4 +231,4 @@ TODO: Verify these instructions, use Hawk to configure the resource.
               cluster projects: The Linux HA project traditionally
               uses the term STONITH, while the Red Hat cluster suite
               uses fencing to denote the same concept.
-.. [#sbd] Shared-storage Based Death. https://github.com/l-mb/sbd
+.. [#sbd] Shared-storage Based Death. https://github.com/ClusterLabs/sbd

@@ -104,4 +104,4 @@ and get rid of that warning, see :doc:`stonith`.
                ``vagrant up``.
 .. [#bindfs] https://github.com/gael-ian/vagrant-bindfs
 .. [#stonith] Shoot the Other Node in the Head.
-.. [#sbd] https://github.com/l-mb/sbd
+.. [#sbd] https://github.com/ClusterLabs/sbd

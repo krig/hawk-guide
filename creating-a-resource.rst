@@ -213,6 +213,12 @@ Once in the edit view, you can change any parameters or attributes for
 the resource, or even delete it.
 
 Note that it is not yet possible to change the resource type of an
-existing resource in Hawk. To rename a resource, go to the *Edit
-Configuration* screen, and use the *Rename* operation for the
-resource.
+existing resource in Hawk.
+
+Renaming
+^^^^^^^^
+
+To rename a resource, go to the *Edit Configuration* screen, and use
+the *Rename* operation for the resource.
+
+Only stopped resources may be renamed.

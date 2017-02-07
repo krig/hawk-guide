@@ -14,7 +14,7 @@ https://www.vagrantup.com/ .
 To begin setting up the example cluster, use ``git`` to check out a
 copy of the source repository for this guide::
 
-  $ git clone git@github.com:krig/hawk-guide
+  $ git clone --recursive git@github.com:krig/hawk-guide
 
 Now let Vagrant configure a virtual machine [#provider]_ running Hawk::
 

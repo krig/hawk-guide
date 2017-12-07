@@ -221,7 +221,7 @@ block device, SBD can be enabled and configured as a cluster resource:
 
     $ crm configure \
         primitive fencing stonith:external/sbd \
-        op start start-delay=15s timeout=60s
+        pcmk_delay_max=30
 
 
 TODO: Verify these instructions, use Hawk to configure the resource.
